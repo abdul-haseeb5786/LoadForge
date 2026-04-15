@@ -1,5 +1,5 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://your-backend.vercel.app', // Update with your Vercel URL
-  socketUrl: 'https://your-backend.vercel.app' // Socket.io wont work on Vercel
+  apiUrl: 'https://load-forge.vercel.app',
+  socketUrl: 'https://load-forge.vercel.app' // Note: Socket.io won't work on Vercel
 };
