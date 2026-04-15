@@ -13,8 +13,13 @@ export class TestRunnerController {
   @UseGuards(TestThrottleGuard)
   async startTest(@Body() createTestDto: CreateTestDto, @Req() req: any) {
     const userId = req.user?._id?.toString() || req.user?.id;
-    const job = await this.testRunnerService.enqueueTest(createTestDto, userId);
-    return { success: true, jobId: job.id };
+    
+    // We start the test directly on Vercel
+    // We fire and forget or await depending on the desired behavior, 
+    // but on serverless it's better to await to keep the function alive as long as possible.
+    const result = await this.testRunnerService.runTest(createTestDto, userId, createTestDto.socketId);
+    
+    return { success: true, resultId: (result as any)._id };
   }
 
   @Post('stop')

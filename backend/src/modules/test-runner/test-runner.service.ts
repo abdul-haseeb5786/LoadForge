@@ -1,7 +1,5 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { Queue } from 'bullmq';
-import { InjectQueue } from '@nestjs/bullmq';
 import { PusherService } from './pusher.service';
 import { HistoryService } from '../history/history.service';
 import { CreateTestDto } from './dto/create-test.dto';
@@ -14,7 +12,6 @@ export class TestRunnerService {
   private redisClient: Redis;
 
   constructor(
-    @InjectQueue('load-test') private loadTestQueue: Queue,
     private pusherService: PusherService,
     private historyService: HistoryService,
     private configService: ConfigService
@@ -24,10 +21,6 @@ export class TestRunnerService {
     this.redisClient = new Redis(redisUrl);
   }
 
-  async enqueueTest(config: CreateTestDto, userId: string): Promise<any> {
-    const job = await this.loadTestQueue.add('execute-test', { config, userId, socketId: config.socketId });
-    return job;
-  }
 
   async stopTest(userId: string) {
     await this.redisClient.set(`test:stop:${userId}`, '1', 'EX', 3600);
