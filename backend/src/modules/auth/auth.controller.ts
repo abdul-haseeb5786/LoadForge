@@ -19,8 +19,11 @@ export class AuthController {
   @UseGuards(AuthGuard('google'))
   async googleAuthRedirect(@Req() req: any, @Res() res: any) {
     const { access_token } = await this.authService.generateToken(req.user);
-    const frontendUrl = this.configService.get<string>('FRONTEND_URL') || 'http://localhost:4200';
-    res.redirect(`${frontendUrl}/auth/callback?token=${access_token}`);
+    const frontendUrl = this.configService.get<string>('FRONTEND_URL');
+    if (!frontendUrl) {
+      console.warn('FRONTEND_URL not set, falling back to localhost for dev');
+    }
+    res.redirect(`${frontendUrl || 'http://localhost:4200'}/auth/callback?token=${access_token}`);
   }
 
   @Get('github')
@@ -31,8 +34,8 @@ export class AuthController {
   @UseGuards(AuthGuard('github'))
   async githubAuthRedirect(@Req() req: any, @Res() res: any) {
     const { access_token } = await this.authService.generateToken(req.user);
-    const frontendUrl = this.configService.get<string>('FRONTEND_URL') || 'http://localhost:4200';
-    res.redirect(`${frontendUrl}/auth/callback?token=${access_token}`);
+    const frontendUrl = this.configService.get<string>('FRONTEND_URL');
+    res.redirect(`${frontendUrl || 'http://localhost:4200'}/auth/callback?token=${access_token}`);
   }
 
   @Get('me')

@@ -10,10 +10,11 @@ export class GithubStrategy extends PassportStrategy(Strategy, 'github') {
     private configService: ConfigService,
     private authService: AuthService,
   ) {
+    const backendUrl = configService.get<string>('BACKEND_URL') || 'http://localhost:3000';
     super({
       clientID: configService.get<string>('GITHUB_CLIENT_ID') || 'mock_client_id',
       clientSecret: configService.get<string>('GITHUB_CLIENT_SECRET') || 'mock_client_secret',
-      callbackURL: '/api/auth/github/callback',
+      callbackURL: `${backendUrl}/api/auth/github/callback`,
       scope: ['user:email'],
     });
   }
