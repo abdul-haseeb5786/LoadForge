@@ -2,7 +2,7 @@ import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Queue } from 'bullmq';
 import { InjectQueue } from '@nestjs/bullmq';
-import { TestRunnerGateway } from './test-runner.gateway';
+import { PusherService } from './pusher.service';
 import { HistoryService } from '../history/history.service';
 import { CreateTestDto } from './dto/create-test.dto';
 import { Redis } from 'ioredis';
@@ -15,7 +15,7 @@ export class TestRunnerService {
 
   constructor(
     @InjectQueue('load-test') private loadTestQueue: Queue,
-    private gateway: TestRunnerGateway,
+    private pusherService: PusherService,
     private historyService: HistoryService,
     private configService: ConfigService
   ) {
@@ -102,7 +102,7 @@ export class TestRunnerService {
 
       completed++;
 
-      this.gateway.server.to(emitTarget).emit('progress', {
+      this.pusherService.trigger(`user-${userId}`, 'progress', {
         completed,
         total: config.totalRequests,
         lastStatus: statusCode,
@@ -130,9 +130,9 @@ export class TestRunnerService {
       await Promise.all(tasks);
     } catch (err: any) {
       if (err.message === 'STOP_FLAG_TRIGGERED') {
-        this.gateway.server.to(emitTarget).emit('stopped', { message: 'Test execution was stopped by the user.' });
+        this.pusherService.trigger(`user-${userId}`, 'stopped', { message: 'Test execution was stopped by the user.' });
       } else {
-        this.gateway.server.to(emitTarget).emit('error', { message: 'An unexpected error occurred during test execution.' });
+        this.pusherService.trigger(`user-${userId}`, 'error', { message: 'An unexpected error occurred during test execution.' });
         throw err;
       }
     }
@@ -168,7 +168,7 @@ export class TestRunnerService {
     this.logger.log(`[${userId}] Simulation finalized. Status: ${finalStatus}. ID: ${savedResult._id}`);
 
     if (finalStatus === 'completed' || finalStatus === 'failed') {
-      this.gateway.server.to(emitTarget).emit('completed', { 
+      this.pusherService.trigger(`user-${userId}`, 'completed', { 
         message: 'Test execution finished successfully.', 
         resultId: savedResult._id.toString() 
       });

@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { BullModule } from '@nestjs/bullmq';
 import { TestRunnerService } from './test-runner.service';
 import { TestRunnerController } from './test-runner.controller';
-import { TestRunnerGateway } from './test-runner.gateway';
+import { PusherService } from './pusher.service';
 import { HistoryModule } from '../history/history.module';
 
 @Module({
@@ -12,8 +12,8 @@ import { HistoryModule } from '../history/history.module';
     }),
     HistoryModule,
   ],
-  providers: [TestRunnerService, TestRunnerGateway],
+  providers: [TestRunnerService, PusherService],
   controllers: [TestRunnerController],
-  exports: [TestRunnerService],
+  exports: [TestRunnerService, PusherService],
 })
 export class TestRunnerModule {}

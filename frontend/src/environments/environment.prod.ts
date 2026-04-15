@@ -1,5 +1,6 @@
 export const environment = {
   production: true,
   apiUrl: 'https://load-forge.vercel.app',
-  socketUrl: 'https://load-forge.vercel.app' // Note: Socket.io won't work on Vercel
+  pusherKey: '92272ce4d2df5c2d4fec',
+  pusherCluster: 'ap2'
 };
