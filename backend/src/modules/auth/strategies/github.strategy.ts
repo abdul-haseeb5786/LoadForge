@@ -10,7 +10,7 @@ export class GithubStrategy extends PassportStrategy(Strategy, 'github') {
     private configService: ConfigService,
     private authService: AuthService,
   ) {
-    const backendUrl = configService.get<string>('BACKEND_URL') || 'http://localhost:3000';
+    const backendUrl = (configService.get<string>('BACKEND_URL') || 'http://localhost:3000').replace(/\/$/, '');
     const callbackURL = `${backendUrl}/api/auth/github/callback`;
     const clientId = configService.get<string>('GITHUB_CLIENT_ID');
 
@@ -29,7 +29,7 @@ export class GithubStrategy extends PassportStrategy(Strategy, 'github') {
 
   async validate(accessToken: string, refreshToken: string, profile: any, done: any): Promise<any> {
     if (!profile.emails || !profile.emails.length) {
-       profile.emails = [{ value: `${profile.username}@github.local` }];
+      profile.emails = [{ value: `${profile.username}@github.local` }];
     }
     const user = await this.authService.validateOAuthUser(profile, 'github');
     done(null, user);

@@ -9,37 +9,37 @@ export class AuthController {
   constructor(
     private authService: AuthService,
     private configService: ConfigService
-  ) {}
+  ) { }
 
   @Get('google')
   @UseGuards(AuthGuard('google'))
-  async googleAuth() {}
+  async googleAuth() { }
 
   @Get('google/callback')
   @UseGuards(AuthGuard('google'))
   async googleAuthRedirect(@Req() req: any, @Res() res: any) {
     const { access_token } = await this.authService.generateToken(req.user);
-    const frontendUrl = this.configService.get<string>('FRONTEND_URL');
-    const redirectUrl = `${frontendUrl || 'http://localhost:4200'}/auth/callback?token=${access_token}`;
-    
+    const frontendUrl = (this.configService.get<string>('FRONTEND_URL') || 'http://localhost:4200').replace(/\/$/, '');
+    const redirectUrl = `${frontendUrl}/auth/callback?token=${access_token}`;
+
     console.log('[AuthController] Google Auth Success. Redirecting to:', redirectUrl);
-    
+
     res.redirect(redirectUrl);
   }
 
   @Get('github')
   @UseGuards(AuthGuard('github'))
-  async githubAuth() {}
+  async githubAuth() { }
 
   @Get('github/callback')
   @UseGuards(AuthGuard('github'))
   async githubAuthRedirect(@Req() req: any, @Res() res: any) {
     const { access_token } = await this.authService.generateToken(req.user);
-    const frontendUrl = this.configService.get<string>('FRONTEND_URL');
-    const redirectUrl = `${frontendUrl || 'http://localhost:4200'}/auth/callback?token=${access_token}`;
-    
+    const frontendUrl = (this.configService.get<string>('FRONTEND_URL') || 'http://localhost:4200').replace(/\/$/, '');
+    const redirectUrl = `${frontendUrl}/auth/callback?token=${access_token}`;
+
     console.log('[AuthController] Github Auth Success. Redirecting to:', redirectUrl);
-    
+
     res.redirect(redirectUrl);
   }
 
