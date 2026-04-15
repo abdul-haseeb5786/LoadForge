@@ -111,8 +111,8 @@ import { lastValueFrom } from 'rxjs';
   `]
 })
 export class HistoryComponent {
-  private historyService = inject(HistoryApiService);
-  private router = inject(Router);
+  historyService = inject(HistoryApiService);
+  router = inject(Router);
   queryClient = injectQueryClient();
 
   filter = signal<'all'|'completed'|'failed'>('all');

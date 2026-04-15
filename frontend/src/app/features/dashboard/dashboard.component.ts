@@ -448,10 +448,8 @@ export class DashboardComponent implements OnInit, OnDestroy {
       ...raw,
       headers: raw.headers ? JSON.parse(raw.headers) : undefined,
       body: raw.body && ['POST','PUT','PATCH'].includes(raw.method!) ? JSON.parse(raw.body) : undefined,
-      socketId: this.socketService['socket'].id
+      socketId: this.userId
     };
-
-    if(!config.socketId) config.socketId = this.userId; // fallback
 
     this.api.runTest(config).subscribe({
       error: (err) => {
