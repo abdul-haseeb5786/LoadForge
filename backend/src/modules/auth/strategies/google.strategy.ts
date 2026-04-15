@@ -13,8 +13,11 @@ export class GoogleStrategy extends PassportStrategy(Strategy, 'google') {
     const clientId = configService.get<string>('GOOGLE_CLIENT_ID');
     const backendUrl = configService.get<string>('BACKEND_URL') || 'http://localhost:3000';
     const callbackURL = `${backendUrl}/api/auth/google/callback`;
-    console.log('Google Strategy initializing with Callback:', callbackURL);
-    console.log('Client ID length:', clientId?.length);
+    
+    console.log('[GoogleStrategy] Initializing...');
+    console.log('[GoogleStrategy] BACKEND_URL from config:', backendUrl);
+    console.log('[GoogleStrategy] Constructed Callback URL:', callbackURL);
+    console.log('[GoogleStrategy] Client ID present:', !!clientId);
 
     super({
       clientID: clientId || 'mock_client_id',

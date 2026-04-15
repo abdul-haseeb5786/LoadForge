@@ -20,10 +20,11 @@ export class AuthController {
   async googleAuthRedirect(@Req() req: any, @Res() res: any) {
     const { access_token } = await this.authService.generateToken(req.user);
     const frontendUrl = this.configService.get<string>('FRONTEND_URL');
-    if (!frontendUrl) {
-      console.warn('FRONTEND_URL not set, falling back to localhost for dev');
-    }
-    res.redirect(`${frontendUrl || 'http://localhost:4200'}/auth/callback?token=${access_token}`);
+    const redirectUrl = `${frontendUrl || 'http://localhost:4200'}/auth/callback?token=${access_token}`;
+    
+    console.log('[AuthController] Google Auth Success. Redirecting to:', redirectUrl);
+    
+    res.redirect(redirectUrl);
   }
 
   @Get('github')
@@ -35,7 +36,11 @@ export class AuthController {
   async githubAuthRedirect(@Req() req: any, @Res() res: any) {
     const { access_token } = await this.authService.generateToken(req.user);
     const frontendUrl = this.configService.get<string>('FRONTEND_URL');
-    res.redirect(`${frontendUrl || 'http://localhost:4200'}/auth/callback?token=${access_token}`);
+    const redirectUrl = `${frontendUrl || 'http://localhost:4200'}/auth/callback?token=${access_token}`;
+    
+    console.log('[AuthController] Github Auth Success. Redirecting to:', redirectUrl);
+    
+    res.redirect(redirectUrl);
   }
 
   @Get('me')
