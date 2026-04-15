@@ -9,14 +9,11 @@ export class HistoryService {
 
   async findAll(userId: string, page = 1, limit = 20) {
     const skip = (page - 1) * limit;
-    const userObjectId = Types.ObjectId.isValid(userId) ? new Types.ObjectId(userId) : null;
     
-    const query: any = {
-      $or: [
-        { userId: userId },
-        ...(userObjectId ? [{ userId: userObjectId }] : [])
-      ]
-    };
+    // Debug log for Vercel troubleshooting
+    console.log(`[History] Fetching simulations for userId: ${userId} (Page: ${page}, Limit: ${limit})`);
+    
+    const query = { userId };
 
     const [data, total] = await Promise.all([
       this.resultModel.find(query).sort({ createdAt: -1 }).skip(skip).limit(limit).exec(),

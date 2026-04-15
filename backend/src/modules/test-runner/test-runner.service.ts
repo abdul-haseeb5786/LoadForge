@@ -144,14 +144,14 @@ export class TestRunnerService {
     const avgResponseTime = times.length > 0 ? times.reduce((a, b) => a + b, 0) / times.length : 0;
     const minResponseTime = times.length > 0 ? Math.min(...times) : 0;
     const maxResponseTime = times.length > 0 ? Math.max(...times) : 0;
-    const successRate = config.totalRequests > 0 ? (successCount / config.totalRequests) * 100 : 0;
+    const successRate = completed > 0 ? (successCount / completed) * 100 : 0;
 
     const resultBody = {
       userId,
       name: config.name,
       config,
       results: {
-        total: config.totalRequests,
+        total: completed,
         success: successCount,
         failed: failCount,
         avgResponseTime,

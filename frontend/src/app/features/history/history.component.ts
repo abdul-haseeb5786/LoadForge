@@ -58,6 +58,16 @@ import { lastValueFrom } from 'rxjs';
               </div>
               <div class="text-[11px] text-text-muted truncate font-mono">{{ test.config.url }}</div>
             </div>
+            
+            <div class="flex items-center gap-1.5 px-2 py-0.5 rounded-full bg-surface-variant border border-border-default h-fit">
+              <span class="w-1.5 h-1.5 rounded-full" [ngClass]="{
+                'bg-success': test.status === 'completed',
+                'bg-error': test.status === 'failed',
+                'bg-border-strong': test.status === 'stopped',
+                'bg-accent': test.status === 'running'
+              }"></span>
+              <span class="text-[10px] font-bold uppercase tracking-tight text-text-secondary">{{ getStatusLabel(test.status) }}</span>
+            </div>
           </div>
           
           <div class="grid grid-cols-2 gap-4">
@@ -96,12 +106,13 @@ import { lastValueFrom } from 'rxjs';
 
     [data-status="completed"] { @apply border-l-success; }
     [data-status="failed"] { @apply border-l-error; }
+    [data-status="stopped"] { @apply border-l-border-strong; opacity: 0.8; }
     [data-status="running"] { @apply border-l-accent animate-pulse; }
   `]
 })
 export class HistoryComponent {
-  historyService = inject(HistoryApiService);
-  router = inject(Router);
+  private historyService = inject(HistoryApiService);
+  private router = inject(Router);
   queryClient = injectQueryClient();
 
   filter = signal<'all'|'completed'|'failed'>('all');
@@ -110,6 +121,11 @@ export class HistoryComponent {
     queryKey: ['history'],
     queryFn: () => lastValueFrom(this.historyService.getTests())
   }));
+
+  getStatusLabel(status: string) {
+    if (status === 'stopped') return 'Stopped';
+    return status.charAt(0).toUpperCase() + status.slice(1);
+  }
 
   deleteMutation = injectMutation(() => ({
     mutationFn: (id: string) => lastValueFrom(this.historyService.deleteTest(id)),
