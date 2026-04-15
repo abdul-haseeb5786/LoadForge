@@ -1,0 +1,66 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Geist+Mono:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg-base: 10 10 15;
+  --bg-surface: 17 17 24;
+  --bg-elevated: 26 26 36;
+  --border-default: 42 42 61;
+  --border-strong: 61 61 92;
+  --text-primary: 255 255 255;
+  --text-secondary: 160 160 192;
+  --text-muted: 112 112 138;
+  --accent-primary: 110 110 255;
+  --accent-hover: 128 128 255;
+  --accent-subtle: 110 110 255;
+  --success: 35 209 139;
+  --error: 248 113 113;
+  --warning: 251 191 36;
+}
+
+@layer base {
+  html, body {
+    @apply h-full overflow-x-hidden;
+  }
+  body {
+    @apply m-0 p-0 font-sans antialiased;
+    background-color: rgb(var(--bg-base));
+    color: rgb(var(--text-primary));
+  }
+  h1, h2, h3, h4, h5, h6, .heading {
+    @apply font-mono tracking-tight;
+  }
+}
+
+@layer components {
+  .page-container {
+    @apply animate-fadeSlideUp mx-auto w-full max-w-[1400px];
+  }
+
+  .glow-card {
+    @apply bg-surface border border-border-default rounded-[12px] shadow-[0_0_20px_rgba(110,110,255,0.05)] transition-all duration-300;
+  }
+
+  .glass {
+    @apply bg-surface/60 backdrop-blur-md;
+  }
+
+  .primary-btn {
+    @apply bg-accent border-none text-white px-6 py-3 rounded-md cursor-pointer text-sm font-sans font-medium transition-all duration-150 hover:bg-accent-hover hover:-translate-y-[1px] hover:shadow-[0_4px_12px_rgba(110,110,255,0.3)] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0 w-full;
+  }
+
+  .ghost-btn {
+    @apply bg-transparent border border-border-default text-text-primary px-4 py-2 rounded-md cursor-pointer text-[13px] font-sans transition-colors duration-150 hover:bg-elevated hover:border-border-strong;
+  }
+  
+  .error-msg {
+    @apply text-error text-[11px] mt-1;
+  }
+
+  .section-label {
+    @apply text-xs uppercase tracking-[1px] text-text-muted mb-2 block font-medium;
+  }
+}
