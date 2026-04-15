@@ -8,10 +8,10 @@ export class PusherService {
   private readonly logger = new Logger(PusherService.name);
 
   constructor(private configService: ConfigService) {
-    const appId = this.configService.get<string>('PUSHER_APP_ID') || '2141932';
-    const key = this.configService.get<string>('PUSHER_KEY') || '92272ce4d2df5c2d4fec';
-    const secret = this.configService.get<string>('PUSHER_SECRET') || '5f935fe6f6d03b27341f';
-    const cluster = this.configService.get<string>('PUSHER_CLUSTER') || 'ap2';
+    const appId = this.configService.get<string>('PUSHER_APP_ID');
+    const key = this.configService.get<string>('PUSHER_KEY');
+    const secret = this.configService.get<string>('PUSHER_SECRET');
+    const cluster = this.configService.get<string>('PUSHER_CLUSTER');
 
     this.pusher = new Pusher({
       appId,
