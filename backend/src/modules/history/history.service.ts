@@ -24,6 +24,9 @@ export class HistoryService {
   }
 
   async findOne(id: string, userId: string) {
+    if (!Types.ObjectId.isValid(userId)) {
+      throw new UnauthorizedException('Invalid user context');
+    }
     const userObjectId = new Types.ObjectId(userId);
     const result = await this.resultModel.findById(id).exec();
     if (!result) throw new NotFoundException('Test not found');

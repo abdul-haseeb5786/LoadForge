@@ -356,8 +356,20 @@ export class DashboardComponent implements OnInit, OnDestroy {
 
   async ngOnInit() {
     this.refreshLimits();
-    const tokenPayload = JSON.parse(atob(this.auth.getToken()!.split('.')[1]));
-    this.userId = tokenPayload.sub;
+    const token = this.auth.getToken();
+    if (!token) {
+      this.router.navigate(['/login']);
+      return;
+    }
+    
+    try {
+      const tokenPayload = JSON.parse(atob(token.split('.')[1]));
+      this.userId = tokenPayload.sub;
+    } catch (e) {
+      console.error('Invalid token', e);
+      this.router.navigate(['/login']);
+      return;
+    }
 
     this.socketService.joinRoom(this.userId);
     this.socketSubs.push(

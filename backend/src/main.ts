@@ -7,6 +7,7 @@ import { ExpressAdapter } from '@nestjs/platform-express';
 import express from 'express';
 
 const server = express();
+let cachedApp: any;
 
 export const createServer = async (expressInstance: any) => {
   const app = await NestFactory.create(
@@ -29,7 +30,9 @@ export const createServer = async (expressInstance: any) => {
 
 // Vercel entry point
 export default async (req: any, res: any) => {
-  await createServer(server);
+  if (!cachedApp) {
+    cachedApp = await createServer(server);
+  }
   server(req, res);
 };
 
